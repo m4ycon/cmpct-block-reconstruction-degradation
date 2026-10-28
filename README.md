@@ -12,8 +12,8 @@ pip install jupyter pandas matplotlib
 jupyter lab p2a_fleet_charts.ipynb
 ```
 
-To draw your own node's charts, rebuild `data/` from its logs. The node needs these in `bitcoin.conf` (timestamps
-stay on, as by default; `-logthreadnames`, `-logsourcelocations` and `-logips` are fine):
+To draw your own node's charts, rebuild `data/peer_groups/` from its logs. The node needs these in `bitcoin.conf`
+(timestamps stay on, as by default; `-logthreadnames`, `-logsourcelocations` and `-logips` are fine):
 
 ```ini
 debug=net          # messages received, getdatas sent, version messages
@@ -25,15 +25,15 @@ debug=mempoolrej   # txs rejected, with the reason
 rotated log (`zstd`, `gzip`, `xz` or `bzip2`). Pass the logs oldest first:
 
 ```sh
-scripts/run_all.sh <outdir> <debug.log>...
+scripts/peer_groups/run_all.sh <outdir> <debug.log>...
 ```
 
 For example, with a folder of rotated logs named by date (`debug.log-2026-07-09.zst`, ...) next to the live
 `debug.log`, writing the per-file counts to a scratch directory and keeping only the CSVs:
 
 ```sh
-scripts/run_all.sh /tmp/logpass ~/node-logs/debug.log-* ~/node-logs/debug.log
-cp /tmp/logpass/{daily_metrics,full_daily_msgs,events}.csv data/
+scripts/peer_groups/run_all.sh /tmp/logpass ~/node-logs/debug.log-* ~/node-logs/debug.log
+cp /tmp/logpass/{daily_metrics,full_daily_msgs,events}.csv data/peer_groups/
 ```
 
 If the rotated names don't sort by date (logrotate's `debug.log.1`, `debug.log.2.gz`, ...), order them by
@@ -42,15 +42,15 @@ modification time instead: `$(ls -1tr ~/node-logs/debug.log*)`. `JOBS` sets how 
 
 ## Contents
 
-- `p2a_fleet_charts.ipynb`: the charts, drawn from `data/`.
-- `data/daily_metrics.csv`: compact blocks reconstructed per day, the share of them that needed no tx requests,
-  and txs rejected for missing or spent inputs.
-- `data/full_daily_msgs.csv`: messages received per day and peer group.
-- `data/events.csv`: when each peer group arrives and stops, drawn as dashed lines.
-- `scripts/`: the scripts that build those files from the logs, which are not in the repo.
+- `p2a_fleet_charts.ipynb`: the charts, drawn from `data/peer_groups/`.
+- `data/peer_groups/daily_metrics.csv`: compact blocks reconstructed per day, the share of them that needed no tx
+  requests, and txs rejected for missing or spent inputs.
+- `data/peer_groups/full_daily_msgs.csv`: messages received per day and peer group.
+- `data/peer_groups/events.csv`: when each peer group arrives and stops, drawn as dashed lines.
+- `scripts/peer_groups/`: the scripts that build those files from the logs, which are not in the repo.
 
-The files in `data/` cover our node from Jul 8 to Oct 23, 2026: its logs from before Jul 8 were lost or lack the
-debug categories above. Days with no logs inside a node's range are drawn empty.
+The files in `data/peer_groups/` cover our node from Jul 8 to Oct 23, 2026: its logs from before Jul 8 were lost or
+lack the debug categories above. Days with no logs inside a node's range are drawn empty.
 
 Our node ran Bitcoin Core v31.0.0, and the scripts expect its log lines (see Sources); other versions or
 implementations may word them differently, or not log them at all.
