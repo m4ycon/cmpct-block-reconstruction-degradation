@@ -3,14 +3,23 @@
 Data and code behind the charts of a node whose share of compact blocks reconstructed without requesting txs fell
 between Jul 18 and Oct 18, 2026. Discussion: https://bnoc.xyz/t/compact-block-reconstruction-degradation/198
 
-Everything in `data/` comes from the node's `debug.log`s, so the same charts can be drawn for any node.
+Two analyses, each with its scripts in `scripts/<name>/`, its CSVs in `data/<name>/` and a notebook that only reads
+those CSVs:
 
-## Usage
+- **Peer groups** (`p2a_fleet_charts.ipynb`): reconstruction share, rejections and messages per day and peer group.
+- **Round trips** (`roundtrip_charts.ipynb`): on sampled days, which txs each compact block was missing and why.
+
+Everything in `data/` comes from the node's `debug.log`s (and, for the round trips, its blocks), so the same
+charts can be drawn for any node.
 
 ```sh
 pip install jupyter pandas matplotlib
-jupyter lab p2a_fleet_charts.ipynb
+jupyter lab
 ```
+
+## Peer groups
+
+### Usage
 
 To draw your own node's charts, rebuild `data/peer_groups/` from its logs. The node needs these in `bitcoin.conf`
 (timestamps stay on, as by default; `-logthreadnames`, `-logsourcelocations` and `-logips` are fine):
@@ -40,7 +49,7 @@ If the rotated names don't sort by date (logrotate's `debug.log.1`, `debug.log.2
 modification time instead: `$(ls -1tr ~/node-logs/debug.log*)`. `JOBS` sets how many logs are read in parallel
 (default 3).
 
-## Contents
+### Contents
 
 - `p2a_fleet_charts.ipynb`: the charts, drawn from `data/peer_groups/`.
 - `data/peer_groups/daily_metrics.csv`: compact blocks reconstructed per day, the share of them that needed no tx
@@ -61,7 +70,8 @@ arrives with its first version message, drawn only if the logs cover the 24 hour
 have arrived during a gap), and stops with the last message one of its peers sent, if that is more than a day
 before the end of the logs.
 
-## Sources
+<details>
+<summary><b>Sources</b></summary>
 
 `full_daily_msgs.csv` and `events.csv` come from these `debug=net` lines (plus the startup line, since peer ids
 restart with bitcoind):
@@ -81,7 +91,10 @@ their timestamp; a block counts as reconstructed without requesting txs when it 
 2026-10-26T00:15:04.249431Z [mempoolrej] <txid> (wtxid=<wtxid>) from peer=281 was not accepted: bad-txns-inputs-missingorspent
 ```
 
-## Alternative: peer-observer
+</details>
+
+<details>
+<summary><b>Alternative: peer-observer</b></summary>
 
 Nothing in this repo uses [peer-observer](https://github.com/peer-observer/peer-observer). If your node runs it,
 the `daily_metrics.csv` numbers can come from its Prometheus instead of the logs (the charts first posted in the
@@ -106,3 +119,109 @@ differ slightly from the log pass. When we compared both on our node, Jul 8 to O
 reconstructed on 105 of 108 days (one more in the logs on the others), and a median of 2% more rejections in the
 logs, more on a few days (twice as many on Sep 12, when bitcoind restarted). `full_daily_msgs.csv` and
 `events.csv` come from the logs either way.
+
+</details>
+
+## Round trips
+
+### Usage
+
+To draw your own node's charts, rebuild `data/roundtrip/` from its logs and blocks. The node needs these in
+`bitcoin.conf`, besides timestamps:
+
+```ini
+debug=cmpctblock   # compact block arrival, reconstruction and txs requested
+debug=mempool      # txs accepted, and replaced with both txids
+debug=mempoolrej   # txs rejected, with the reason and, for a replacement, both fees
+debug=txpackages   # orphans stored and removed, with the orphanage size
+```
+
+The scripts need the same tools as the peer groups ones, plus `zstd` and `bitcoin-cli` talking to the node to
+fetch the blocks (a pruned node works too). Pass the logs from 3 days before the first day to the end of the last
+one, in any order:
+
+```sh
+scripts/roundtrip/extract.sh <workdir> <debug.log>...
+python3 scripts/roundtrip/fetch_blocks.py <workdir> <YYYY-MM-DD>...
+scripts/roundtrip/run_days.sh <workdir> data/roundtrip <YYYY-MM-DD>...
+python3 scripts/roundtrip/example_chain.py <workdir> data/roundtrip <YYYY-MM-DD> <txid>
+```
+
+The last one writes the timeline of the chain of a link swept on that day. `JOBS` sets how many logs `extract.sh`
+reads in parallel (default 3) and how many days `run_days.sh` analyzes at once (default 2); each day holds every tx
+of its blocks in memory.
+
+### Contents
+
+- `roundtrip_charts.ipynb`: the charts, drawn from `data/roundtrip/`.
+- `data/roundtrip/blocks.csv`: one row per compact block reconstructed: rebuild time (first `Saw new header` to
+  "Successfully reconstructed"), txs and bytes requested and txs taken from the extra pool as logged, txs missing
+  by our count and by cause, and whether that first header came in a `cmpctblock` or a `headers` message.
+- `data/roundtrip/causes.csv`: missing txs and their vsize per day and cause.
+- `data/roundtrip/chain_heads.csv`: the first missing tx of each P2A chain refused for its fee, by its role and by
+  what our mempool held instead.
+- `data/roundtrip/block_types.csv`: the txs of the day's blocks as P2A chain, 140 vB rune mint or other.
+- `data/roundtrip/orphanage.csv`: orphans stored per day, how many went into a full orphanage (3,000 entries), and
+  how long the missing chain txs that were orphans when their block came had been around (quartiles, minutes).
+- `data/roundtrip/example_chain.csv`: one chain, step by step from the log.
+- `scripts/roundtrip/`: the scripts that build those files from the logs and blocks.
+
+The files in `data/roundtrip/` cover our node on 26 days of 2026: Jun 6, 7, 12 and 13 before the fleet; Jul 12,
+13, 16, 17, 23, 24, 26, 27, Aug 8, 9, 12, 13, Sep 5, 6, Oct 5, 6, 11 and 12 while it was active (from Jul 4, when
+`/txbroadcast:0.1/` first appeared, to Oct 18); and Oct 20, 21, 26 and 27 after it. Our logs have a gap from
+Jun 14 to Jul 8.
+
+Our node ran Bitcoin Core v31.0.0 without `-logthreadnames`, `-logsourcelocations` or `-logips`. The scripts match
+the message text wherever it sits in the line (see Sources), but were not run on logs with those options.
+
+A block counts on the UTC day its `cmpctblock` arrived, and is analyzed with the log lines from 00:00 UTC three
+days before. One of its txs is missing if, before that `cmpctblock`, the log never shows it accepted, shows it
+replaced, rejected or stored as an orphan after its last acceptance, or accepted under another wtxid. The summary
+line `run_days.sh` prints for each day counts the blocks whose missing count lands between "txn requested" and
+"requested + extra pool", or within 10% of "requested" (at least 2).
+
+Each tx gets a role from its shape alone, whoever sent it (an anchor and the child that pays for it show up as a
+root and a closing):
+
+| role | inputs and outputs |
+|---|---|
+| root | creates a P2A output, spends none |
+| link | 1 input, spending a P2A output; creates a P2A output |
+| refill | several inputs, one spending a P2A output; creates a P2A output |
+| closing | spends a P2A output, creates none |
+| sweeper | 1 input, spending a P2A output; every output worth 0 |
+| other | neither spends nor creates a P2A output |
+
+A P2A chain tx (any role but other) takes the cause of the first missing tx above it in its chain. For one refused
+for its fee, the rejection line gives the fee it lost to; its "not enough additional fees to relay" form gives the
+minimum fee bump instead, so it never counts as sweeper kept.
+
+| cause | rule |
+|---|---|
+| sweeper kept, chain mined | the fee it lost to is exactly the value of the anchor it spends |
+| chain kept, sweeper mined | the first missing tx is a sweeper |
+| root refused | the first missing tx is a root |
+| other P2A | any other P2A chain tx |
+| 140 vB rune mints | not P2A; 139-141 vB, 1 input, 2 outputs, a runestone (`OP_RETURN OP_13`) |
+| everything else | the rest |
+
+<details>
+<summary><b>Sources</b></summary>
+
+`extract.sh` keeps these lines (the `Saw new` ones are logged without any debug category):
+
+```
+2026-10-10T01:33:46.770727Z [mempool] AcceptToMemoryPool: peer=388692: accepted <txid> (wtxid=<wtxid>) (poolsz 75715 txn, 222516 kB)
+2026-10-10T01:33:46.867764Z [mempool] replacing mempool tx <txid> (wtxid=<wtxid>, fees=448, vsize=140). New tx <txid> (wtxid=<wtxid>, fees=464, vsize=140)
+2026-10-10T01:33:47.393579Z [mempoolrej] <txid> (wtxid=<wtxid>) from peer=403238 was not accepted: insufficient fee, rejecting replacement <txid>, less fees than conflicting txs; 0.0000001 < 0.0000035
+2026-10-10T01:33:46.666679Z [txpackages] stored orphan tx <txid> (wtxid=<wtxid>), weight: 722 (mapsz 3001 outsz 423)
+2026-10-10T01:33:46.770521Z [txpackages] removed orphan tx <txid> (wtxid=<wtxid>) (1 announcements)
+2026-10-29T00:07:33.996530Z Saw new header hash=<hash> height=973615 peer=76692
+2026-10-29T00:29:24.569777Z Saw new cmpctblock header hash=<hash> height=973616 peer=9200
+2026-10-10T01:49:35.203144Z [cmpctblock] Initializing PartiallyDownloadedBlock for block <hash> using a cmpctblock of 23990 bytes
+2026-10-26T00:13:45.290034Z [cmpctblock] Successfully reconstructed block <hash> with 1 txn prefilled, 2912 txn from mempool (incl at least 0 from extra pool) and 2 txn (370 bytes) requested
+```
+
+The txs of each block come from `getblock <hash> 3` (2 when the node has no undo data for it).
+
+</details>

@@ -1,0 +1,88 @@
+day,head_role,our_mempool_had,heads
+2026-07-12,sweeper,other txs with a different fee,83
+2026-07-12,link,a tx paying the whole anchor as fee (sweeper),31
+2026-07-13,sweeper,other txs with a different fee,72
+2026-07-13,link,a tx paying the whole anchor as fee (sweeper),35
+2026-07-13,closing,other txs with a different fee,2
+2026-07-16,link,a tx paying the whole anchor as fee (sweeper),61
+2026-07-16,sweeper,other txs with a different fee,9
+2026-07-17,link,a tx paying the whole anchor as fee (sweeper),38
+2026-07-23,link,a tx paying the whole anchor as fee (sweeper),1703
+2026-07-23,sweeper,other txs with a different fee,152
+2026-07-24,link,a tx paying the whole anchor as fee (sweeper),688
+2026-07-24,sweeper,other txs with a different fee,193
+2026-07-26,link,a tx paying the whole anchor as fee (sweeper),1080
+2026-07-26,sweeper,other txs with a different fee,369
+2026-07-26,link,other txs with a different fee,84
+2026-07-26,closing,other txs with a different fee,11
+2026-07-27,link,a tx paying the whole anchor as fee (sweeper),516
+2026-07-27,sweeper,other txs with a different fee,381
+2026-07-27,link,other txs with a different fee,113
+2026-07-27,closing,other txs with a different fee,2
+2026-07-27,closing,a tx paying the whole anchor as fee (sweeper),1
+2026-08-08,link,a tx paying the whole anchor as fee (sweeper),2276
+2026-08-08,sweeper,other txs with a different fee,393
+2026-08-08,link,other txs with a different fee,178
+2026-08-08,closing,a tx paying the whole anchor as fee (sweeper),11
+2026-08-08,closing,other txs with a different fee,11
+2026-08-08,root,another tx spending one of its inputs,3
+2026-08-09,link,a tx paying the whole anchor as fee (sweeper),3121
+2026-08-09,sweeper,other txs with a different fee,1174
+2026-08-09,link,other txs with a different fee,139
+2026-08-09,closing,a tx paying the whole anchor as fee (sweeper),27
+2026-08-09,closing,other txs with a different fee,18
+2026-08-09,root,another tx spending one of its inputs,7
+2026-08-12,refill,a tx paying the whole anchor as fee (sweeper),1204
+2026-08-12,sweeper,other txs with a different fee,892
+2026-08-12,link,a tx paying the whole anchor as fee (sweeper),804
+2026-08-12,root,another tx spending one of its inputs,47
+2026-08-12,closing,other txs with a different fee,32
+2026-08-12,link,other txs with a different fee,10
+2026-08-12,refill,other txs with a different fee,6
+2026-08-12,closing,a tx paying the whole anchor as fee (sweeper),3
+2026-08-13,refill,a tx paying the whole anchor as fee (sweeper),1357
+2026-08-13,link,a tx paying the whole anchor as fee (sweeper),790
+2026-08-13,sweeper,other txs with a different fee,661
+2026-08-13,root,another tx spending one of its inputs,83
+2026-08-13,closing,other txs with a different fee,19
+2026-08-13,refill,other txs with a different fee,17
+2026-08-13,link,other txs with a different fee,15
+2026-08-13,closing,a tx paying the whole anchor as fee (sweeper),2
+2026-09-05,link,a tx paying the whole anchor as fee (sweeper),5031
+2026-09-05,sweeper,other txs with a different fee,188
+2026-09-05,link,other txs with a different fee,97
+2026-09-05,closing,other txs with a different fee,10
+2026-09-05,closing,a tx paying the whole anchor as fee (sweeper),9
+2026-09-05,root,another tx spending one of its inputs,6
+2026-09-06,link,a tx paying the whole anchor as fee (sweeper),6408
+2026-09-06,sweeper,other txs with a different fee,383
+2026-09-06,link,other txs with a different fee,193
+2026-09-06,closing,other txs with a different fee,7
+2026-09-06,closing,a tx paying the whole anchor as fee (sweeper),5
+2026-10-05,link,a tx paying the whole anchor as fee (sweeper),6639
+2026-10-05,root,another tx spending one of its inputs,1120
+2026-10-05,sweeper,other txs with a different fee,947
+2026-10-05,link,other txs with a different fee,25
+2026-10-05,closing,other txs with a different fee,1
+2026-10-06,link,a tx paying the whole anchor as fee (sweeper),5454
+2026-10-06,root,another tx spending one of its inputs,1011
+2026-10-06,sweeper,other txs with a different fee,490
+2026-10-06,link,other txs with a different fee,30
+2026-10-06,closing,other txs with a different fee,11
+2026-10-11,link,a tx paying the whole anchor as fee (sweeper),5693
+2026-10-11,sweeper,other txs with a different fee,1160
+2026-10-11,root,another tx spending one of its inputs,951
+2026-10-11,link,other txs with a different fee,41
+2026-10-11,closing,other txs with a different fee,7
+2026-10-11,closing,a tx paying the whole anchor as fee (sweeper),4
+2026-10-12,link,a tx paying the whole anchor as fee (sweeper),3689
+2026-10-12,sweeper,other txs with a different fee,930
+2026-10-12,root,another tx spending one of its inputs,884
+2026-10-12,link,other txs with a different fee,44
+2026-10-12,closing,other txs with a different fee,14
+2026-10-12,closing,a tx paying the whole anchor as fee (sweeper),9
+2026-10-20,sweeper,other txs with a different fee,6
+2026-10-20,closing,other txs with a different fee,1
+2026-10-20,link,a tx paying the whole anchor as fee (sweeper),1
+2026-10-21,sweeper,other txs with a different fee,2
+2026-10-27,sweeper,other txs with a different fee,1

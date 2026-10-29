@@ -1,0 +1,8 @@
+time,step,actor,detail
+2026-10-11T00:00:05.244235Z,Parent link accepted,fleet peer,anchor 260 sats
+2026-10-11T00:00:05.624362Z,Link accepted,fleet peer,"fee 10 sats, 94 vB"
+2026-10-11T00:00:06.528837Z,Sweeper replaces the link,/p2aburn:1.0/ peer,"fee 260 sats (the whole anchor), 67 vB"
+2026-10-11T00:00:09.687032Z,"Link sent again, rejected",fleet peer,RBF: 10 < 260 sats
+2026-10-11T00:00:11.243514Z,Descendants become orphans,fleet peers,"23 txs: 21 link, 1 refill, 1 closing"
+2026-10-11T00:17:54.977727Z,Block arrives as a compact block,miner,"height 970850, link and all 23 descendants inside"
+2026-10-11T00:17:56.427054Z,Round trip done,our node,286 txs requested (31271 bytes) for the whole block
