@@ -1,0 +1,14 @@
+image:
+  repository: bitcoindevproject/bitcoin
+  tag: "31.0"
+
+# The tx rate is mainnet's but blocks come every minute, so per-block quantities shrink to 1/10:
+# block weight keeps the mempool about as many blocks deep as on mainnet, and the extra pool turns
+# over about as many times per block (scaled 1/5 rather than 1/10 by choice of the experiment).
+defaultConfig: |
+  debug=net
+  debug=cmpctblock
+  debug=mempool
+  debug=mempoolrej
+  blockmaxweight=400000
+  blockreconstructionextratxn=20

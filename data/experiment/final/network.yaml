@@ -1,0 +1,128 @@
+nodes:
+  - name: miner-0
+    addnode:
+      - node-02
+  - name: miner-1
+    addnode:
+      - node-05
+      - node-29
+  - name: miner-2
+    addnode:
+      - node-22
+      - node-28
+  - name: node-00
+    addnode:
+      - node-04
+  - name: node-01
+    addnode:
+      - miner-1
+      - node-22
+  - name: node-02
+    addnode:
+      - miner-0
+      - node-26
+  - name: node-03
+    addnode:
+      - node-04
+      - node-12
+  - name: node-04
+    addnode:
+      - miner-1
+      - sweeper-0
+  - name: node-05
+    addnode:
+      - node-22
+  - name: node-06
+    addnode:
+      - node-25
+  - name: node-07
+    addnode:
+      - fleet-0
+  - name: node-08
+    addnode:
+      - node-26
+  - name: node-09
+    addnode:
+      - node-12
+      - node-20
+  - name: node-10
+    addnode:
+      - node-12
+  - name: node-11
+    addnode:
+      - miner-1
+      - node-16
+  - name: node-12
+    addnode:
+      - node-03
+      - node-08
+  - name: node-13
+    addnode:
+      - node-04
+      - node-19
+  - name: node-14
+    addnode:
+      - mint-0
+      - node-09
+  - name: node-15
+    addnode:
+      - node-16
+      - node-29
+  - name: node-16
+    addnode:
+      - miner-2
+      - node-28
+  - name: node-17
+    addnode:
+      - node-23
+  - name: node-18
+    addnode:
+      - node-08
+      - node-21
+  - name: node-19
+    addnode:
+      - node-02
+      - node-26
+  - name: node-20
+    addnode:
+      - node-07
+  - name: node-21
+    addnode:
+      - node-20
+      - node-29
+  - name: node-22
+    addnode:
+      - node-28
+  - name: node-23
+    addnode:
+      - node-16
+  - name: node-24
+    addnode:
+      - mint-0
+      - node-07
+  - name: node-25
+    addnode:
+      - miner-0
+  - name: node-26
+    addnode:
+      - sweeper-0
+  - name: node-27
+    addnode:
+      - node-22
+  - name: node-28
+    addnode:
+      - node-19
+      - node-26
+  - name: node-29
+    addnode:
+      - miner-0
+      - node-21
+  - name: mint-0
+    addnode:
+      - fleet-0
+  - name: fleet-0
+    addnode:
+      - node-24
+  - name: sweeper-0
+    addnode:
+      - node-27
